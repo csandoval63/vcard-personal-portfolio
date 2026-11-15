@@ -1,67 +1,248 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About Christian Sandoval</title>
-  <meta name="description" content="Meet Christian Sandoval, a cybersecurity professional and web and app developer from Southern California.">
   <link rel="canonical" href="https://www.gigglez.dev/about/">
-  <link rel="icon" href="../assets/images/cyber-security.ico">
+
+  <link rel="shortcut icon" href="../assets/images/cyber-security.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="../assets/css/style.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
-  <link rel="stylesheet" href="../assets/css/portfolio.css">
-  <style>
-    .about-layout { display: grid; grid-template-columns: minmax(200px, 245px) minmax(0, 1fr); gap: 24px; padding-block: 36px 12px; }
-    .about-panel { background: #202022; border: 1px solid #38383a; border-radius: 20px; box-shadow: 0 16px 36px #0003; padding: clamp(22px, 4vw, 38px); }
-    .about-sidebar { text-align: center; align-self: start; }
-    .about-sidebar .portrait { width: 112px; border-radius: 22px; }
-    .about-name { font-weight: 700; margin: 12px 0 5px; }
-    .about-role { color: var(--muted); margin: 0; font-size: .9rem; }
-    .about-copy h1 { font: 700 clamp(1.8rem, 4vw, 2.5rem)/1.15 "Instrument Sans", system-ui, sans-serif; margin: 0 0 24px; }
-    .about-copy h1::after { content: ""; display: block; width: 40px; height: 4px; border-radius: 4px; background: var(--accent); margin-top: 14px; }
-    .about-copy p { max-width: 62ch; color: var(--muted); line-height: 1.65; margin: 0 0 12px; }
-    .about-copy p:last-child { margin-bottom: 0; }
-    @media (max-width: 680px) {
-      .about-layout { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-      .about-sidebar { text-align: left; display: flex; gap: 16px; align-items: center; }
-      .about-sidebar .portrait { width: 70px; border-radius: 14px; }
-      .about-name { margin-top: 0; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
-  <header class="wrap topbar">
-    <a class="brand" href="../">Christian Sandoval</a>
-    <nav aria-label="Main navigation">
-      <a href="../#work">Work</a>
-      <a href="./" aria-current="page">About</a>
-      <a href="../#certifications">Certifications</a>
-      <a href="../#contact">Contact</a>
-    </nav>
-  </header>
-  <main class="wrap about-layout">
-    <aside class="about-panel about-sidebar" aria-label="Profile">
-      <img class="portrait" src="../assets/images/my%20picture(1).jpg" alt="Christian Sandoval" width="128" height="128" loading="lazy">
-      <div>
-        <p class="about-name">Christian Sandoval</p>
-        <p class="about-role">Associate Technical Account Manager</p>
-      </div>
-    </aside>
-    <section class="about-panel about-copy" aria-labelledby="about-title">
-        <h1 id="about-title">About me</h1>
-        <p>I’m a cybersecurity professional from the Inland Empire in Southern California. I work at Tanium as an Associate Technical Account Manager and study web security through bug bounty practice.</p>
-        <p>Outside of work, I spend as much time as I can with family. I enjoy running, mountain biking, and gaming with friends.</p>
-    </section>
 
+<body>
+
+  <main>
+
+    <aside class="sidebar" data-sidebar>
+
+      <div class="sidebar-info">
+
+        <figure class="avatar-box">
+          <img src="../assets/images/my%20picture(1).jpg" alt="Christian Sandoval" width="80">
+        </figure>
+
+        <div class="info-content">
+          <h1 class="name" title="Christian Sandoval">Christian Sandoval</h1>
+
+          <p class="title">Associate Technical Account Manager</p>
+        </div>
+
+        <button class="info_more-btn" data-sidebar-btn>
+          <span>Show Contacts</span>
+
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+
+      </div>
+
+      <div class="sidebar-info_more">
+
+        <div class="separator"></div>
+
+        <ul class="contacts-list">
+
+          <li class="contact-item">
+
+            <div class="icon-box">
+              <ion-icon name="mail-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Email</p>
+
+              <a href="mailto:christian.sandoval063@gmail.com" class="contact-link">christian.sandoval063@gmail.com</a>
+            </div>
+
+          </li>
+
+          <li class="contact-item">
+
+            <div class="icon-box">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Location Region</p>
+
+              <address>Inland Empire, California, USA</address>
+            </div>
+
+          </li>
+
+          <li class="contact-item">
+            <form method="get" action="../assets/pdf/Resume.pdf">
+              <button class="form-btn" type="submit">My Full Resume</button>
+            </form>
+          </li>
+
+        </ul>
+
+      </div>
+
+    </aside>
+
+    <div class="main-content">
+
+      <nav class="navbar">
+
+        <ul class="navbar-list">
+
+          <li class="navbar-item">
+            <a class="navbar-link active" href="./" aria-current="page">About</a>
+          </li>
+
+          <li class="navbar-item">
+            <a class="navbar-link" href="../assets/pdf/Resume.pdf">Resume</a>
+          </li>
+
+	<li class="navbar-item">
+            <a class="navbar-link" href="../#work">Portfolio</a>
+	</li>
+
+          <li class="navbar-item">
+            <a class="navbar-link" href="../#contact">Contact</a>
+          </li>
+
+        </ul>
+
+      </nav>
+
+      <article class="about active">
+        <header>
+          <h2 class="h2 article-title">About me</h2>
+        </header>
+        <section class="about-text">
+          <p>I'm a cybersecurity professional from the Inland Empire in Southern California. I work at Tanium as an Associate Technical Account Manager and study web security through bug bounty practice.</p>
+          <p>Outside of work, I spend as much time as I can with family. I enjoy running, mountain biking, and gaming with friends.</p>
+        </section>
+        <section class="service">
+
+          <h3 class="h3 service-title">What I Do</h3>
+
+          <ul class="service-list">
+
+            <li class="service-item">
+
+              <div class="service-icon-box">
+                <img src="../assets/images/orange%20bug.png" alt="" width="40">
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Bug Bounty</h4>
+
+                <p class="service-item-text">
+                  Currently educating myself on the OWASP Top 10 to commit to bug bounty hunting part time.
+
+                </p>
+              </div>
+
+            </li>
+
+            <li class="service-item">
+
+              <div class="service-icon-box">
+                <img src="../assets/images/wifi.svg" alt="" width="40">
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Networking</h4>
+
+                <p class="service-item-text">
+                  Experienced networking professional skilled in designing, implementing, and securing robust network infrastructures for optimal performance and reliability.
+                </p>
+              </div>
+
+            </li>
+
+            <li class="service-item">
+
+              <div class="service-icon-box">
+                <img src="../assets/images/search-outline.svg" alt="" width="40">
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">Forensics</h4>
+
+                <p class="service-item-text">
+                  Skilled computer forensics expert specializing in the investigation, analysis, and recovery of digital evidence for cybersecurity
+                </p>
+              </div>
+
+            </li>
+
+            <li class="service-item">
+
+              <div class="service-icon-box">
+                <img src="../assets/images/desktop-outline.svg" alt="" width="40">
+              </div>
+
+              <div class="service-content-box">
+                <h4 class="h4 service-item-title">System Administration</h4>
+
+                <p class="service-item-text">
+                  Experienced system administrator proficient in managing, maintaining, and securing enterprise IT infrastructures to ensure optimal performance and reliability.
+                </p>
+              </div>
+
+            </li>
+
+          </ul>
+
+        </section>
+
+        <section class="clients">
+
+          <h3 class="h3 clients-title">Certifications Quick View</h3>
+
+          <ul class="clients-list has-scrollbar">
+
+            <li class="clients-item">
+              <img src="../assets/images/logosecurityplus.svg" alt="CompTIA Security+">
+            </li>
+
+            <li class="clients-item">
+              <img src="../assets/images/logopentestplus.svg" alt="CompTIA PenTest+">
+            </li>
+
+            <li class="clients-item">
+              <img src="../assets/images/cnvp.png" alt="CompTIA Network Vulnerability Assessment Professional">
+            </li>
+
+            <li class="clients-item">
+              <img src="../assets/images/TCO.png" alt="Tanium Certified Operator">
+            </li>
+
+            <li class="clients-item">
+              <img src="../assets/images/TCA.png" alt="Tanium Certified Administrator">
+            </li>
+
+            <li class="clients-item">
+              <img src="../assets/images/ace-1-removebg-preview.png" alt="AccessData Certified Examiner">
+            </li>
+
+          </ul>
+
+        </section>
+      </article>
+    </div>
   </main>
-  <footer class="wrap footer">
-    <span>Christian Sandoval</span>
-    <nav aria-label="Professional links">
-      <a href="../assets/pdf/Resume.pdf">Résumé</a>
-      <a href="https://github.com/csandoval63">GitHub</a>
-      <a href="https://www.linkedin.com/in/christian-sandoval-b2913617a/">LinkedIn</a>
-    </nav>
-  </footer>
+  <script>
+    const sidebar = document.querySelector('[data-sidebar]');
+    const contacts = document.querySelector('[data-sidebar-btn]');
+    contacts.setAttribute('aria-expanded', 'false');
+    contacts.addEventListener('click', () => {
+      contacts.setAttribute('aria-expanded', String(sidebar.classList.toggle('active')));
+    });
+  </script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 </html>
