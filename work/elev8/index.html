@@ -19,7 +19,7 @@
     .finishes button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; color: var(--ink); border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font: inherit; cursor: pointer; }
     .finishes button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
     .swatch { width: 14px; height: 14px; border: 1px solid #ffffff69; border-radius: 50%; background: var(--swatch); }
-    .comparison { --split: 50%; position: relative; aspect-ratio: 900 / 599; overflow: hidden; border-radius: 10px; background: var(--paper); }
+    .comparison { --split: 50%; position: relative; aspect-ratio: 900 / 600; overflow: hidden; border-radius: 10px; background: var(--paper); }
     .comparison img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
     .comparison .original { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
     .divider { position: absolute; inset: 0 auto 0 var(--split); width: 2px; transform: translateX(-50%); background: white; pointer-events: none; }
@@ -51,15 +51,15 @@
 
     <section class="demo" aria-labelledby="demo-title">
       <h2 id="demo-title">Try the wrap comparison</h2>
-      <p>Choose a finish for the Chevy Camaro, then drag the slider to compare it with the original.</p>
+      <p>Choose a finish for the Ford Mustang, then drag the slider to compare it with the original.</p>
       <div class="finishes" role="group" aria-label="Wrap finishes" hidden>
-        <button type="button" data-image="purple.webp" aria-pressed="true"><span class="swatch" style="--swatch:#280137" aria-hidden="true"></span>Midnight Purple Gloss</button>
-        <button type="button" data-image="green.webp" aria-pressed="false"><span class="swatch" style="--swatch:#055620" aria-hidden="true"></span>Gloss Noble Green</button>
-        <button type="button" data-image="sage.webp" aria-pressed="false"><span class="swatch" style="--swatch:#929c90" aria-hidden="true"></span>Satin Sage</button>
+        <button type="button" data-image="mustang-purple.webp" aria-pressed="true"><span class="swatch" style="--swatch:#280137" aria-hidden="true"></span>Midnight Purple Gloss</button>
+        <button type="button" data-image="mustang-green.webp" aria-pressed="false"><span class="swatch" style="--swatch:#055620" aria-hidden="true"></span>Gloss Noble Green</button>
+        <button type="button" data-image="mustang-sage.webp" aria-pressed="false"><span class="swatch" style="--swatch:#929c90" aria-hidden="true"></span>Satin Sage</button>
       </div>
       <div class="comparison">
-        <img id="wrapped" src="purple.webp" width="900" height="599" alt="Chevy Camaro preview in Midnight Purple Gloss">
-        <img class="original" src="original.webp" width="900" height="599" alt="Original Chevy Camaro illustration">
+        <img id="wrapped" src="mustang-purple.webp" width="900" height="600" alt="Ford Mustang preview in Midnight Purple Gloss">
+        <img class="original" src="mustang-original.webp" width="900" height="600" alt="Original Ford Mustang illustration">
         <div class="divider" aria-hidden="true"></div>
         <span class="comparison-label" aria-hidden="true">Original</span>
         <span class="comparison-label" aria-hidden="true">Wrapped</span>
@@ -91,7 +91,7 @@
       if (!selected) return;
       const name = selected.textContent.trim();
       wrapped.src = selected.dataset.image;
-      wrapped.alt = 'Chevy Camaro preview in ' + name;
+      wrapped.alt = 'Ford Mustang preview in ' + name;
       status.textContent = name;
       for (const button of finishes.querySelectorAll('button')) {
         button.setAttribute('aria-pressed', String(button === selected));
