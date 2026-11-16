@@ -30,6 +30,11 @@
     .comparison-label:first-of-type { left: 9px; }
     .comparison-label:last-of-type { right: 9px; }
     .case-next { margin-top: 34px; }
+    .staff-flow { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 18px 0 0; }
+    .staff-flow li { padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+    .staff-flow h3 { margin: 0; font-size: 1.05rem; }
+    .staff-flow p { margin: 8px 0 0; }
+    .staff-workflow { margin-top: 34px; }
   </style>
 </head>
 <body>
@@ -69,9 +74,28 @@
       <p>Rendered color previews are approximate. Lighting and the actual film affect how a wrap looks in person.</p>
     </section>
 
+    <section class="demo staff-workflow" aria-labelledby="staff-title">
+      <h2 id="staff-title">Inside the Color Manager</h2>
+      <p>I built a staff dashboard so the shop can update the wrap catalog, add vehicle previews, and manage quote requests without editing the website’s code.</p>
+      <ol class="staff-flow">
+        <li>
+          <h3>Add a wrap color</h3>
+          <p>Enter the film name, brand, and finish. Upload a photo of the swatch to extract a starting color, then adjust it with the color picker before saving.</p>
+        </li>
+        <li>
+          <h3>Keep inventory current</h3>
+          <p>Mark a wrap available or out of stock, archive discontinued colors, or import multiple wraps from a CSV. Shoppers can use the in-stock filter in the live studio.</p>
+        </li>
+        <li>
+          <h3>Set up a vehicle preview</h3>
+          <p>Upload a vehicle image and paint or upload a mask that marks the body panels to recolor. Publish the vehicle when it’s ready for shoppers to try.</p>
+        </li>
+      </ol>
+    </section>
+
     <section class="case-next" aria-labelledby="quote-title">
       <h2 id="quote-title">From preview to quote</h2>
-      <p>On the live site, shoppers can select a vehicle and finish in the wrap studio. Their selections are carried into a quote request so the shop knows what look they have in mind.</p>
+      <p>On the live site, shoppers can select a vehicle and finish in the wrap studio. Their selections are carried into a quote request so the shop knows what look they have in mind. In the dashboard, staff can see the selected vehicle and wrap, claim the request, and update its status.</p>
       <div class="project-actions">
         <a class="button" href="https://elev8autostyling.shop/#finishes">Open the live wrap studio <span aria-hidden="true">↗</span></a>
         <a class="button" href="https://elev8autostyling.shop/#contact">See the quote form <span aria-hidden="true">↗</span></a>
