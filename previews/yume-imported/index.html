@@ -12,11 +12,11 @@
   <link rel="preload" href="assets/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="manager.css">
-  <link rel="stylesheet" href="catalog.css">
-  <script defer src="demo-data.js"></script>
+  <link rel="stylesheet" href="catalog.css?v=2">
+  <script defer src="demo-data.js?v=2"></script>
   <script defer src="site.js"></script>
-  <script defer src="catalog.js"></script>
-  <script defer src="manager.js"></script>
+  <script defer src="catalog.js?v=2"></script>
+  <script defer src="manager.js?v=2"></script>
 </head>
 <body data-mode="demo">
   <a class="skip" href="#main">Skip to content</a>
@@ -134,9 +134,19 @@
         <div class="catalog-filters" role="group" aria-label="Filter cars">
           <button type="button" data-car-filter="All" aria-pressed="true">All</button>
           <button type="button" data-car-filter="Available" aria-pressed="false">Available</button>
+          <button type="button" data-car-filter="Coming Soon" aria-pressed="false">Coming Soon</button>
           <button type="button" data-car-filter="Sold" aria-pressed="false">Sold</button>
         </div>
-        <div id="car-inventory" class="catalog-grid" aria-live="polite"></div>
+        <div aria-live="polite">
+          <div id="car-inventory" class="catalog-grid"></div>
+          <section class="upcoming-inventory" id="coming-soon" aria-labelledby="upcoming-title">
+            <div class="upcoming-heading">
+              <h3 id="upcoming-title">Coming Soon</h3>
+              <p>Estimated arrival dates are subject to change.</p>
+            </div>
+            <div id="upcoming-cars" class="catalog-grid"></div>
+          </section>
+        </div>
       </div>
     </section>
 

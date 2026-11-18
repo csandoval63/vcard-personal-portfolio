@@ -3,6 +3,7 @@ window.yumeDemo = (() => {
   const containerStatuses = ['Open', 'Closed', 'In transit', 'Arrived'];
   const cargoOptions = ['Parts only', 'Vehicles only', 'Vehicles and parts'];
   const inquiryStatuses = ['New', 'Reviewing', 'Quote sent', 'Closed'];
+  const carStatuses = ['Available', 'Coming Soon', 'Sold'];
   const services = {
     vehicle: 'Vehicles',
     parts: 'Parts & collectibles',
@@ -14,10 +15,16 @@ window.yumeDemo = (() => {
     { id: 'wheel-set', reference: 'Wheels', name: 'Japanese alloy wheel set', description: 'Include your diameter, bolt pattern, and offset.', photo: 'assets/parts.webp' },
     { id: 'body-kit', reference: 'Exterior', name: 'Body kit sourcing', description: 'Include your chassis code and the kit or brand you’re looking for.' },
   ];
+  const upcomingExample = {
+    id: 'upcoming-demo', name: 'Mazda RX-7 FD', status: 'Coming Soon',
+    eta: '2027-01-22', priceCents: null, photo: '',
+    description: 'Example listing for an incoming car.',
+  };
   const initial = {
     cars: [
       { id: 'skyline-sedan', name: 'Nissan Skyline sedan', description: 'Purple four-door Skyline. Ask about the vehicle and inspection details.', status: 'Available', priceCents: null, photo: 'assets/hero.webp' },
       { id: 'kei-truck', name: 'Japanese kei truck', description: 'Compact pickup with a drop-side bed. Example listing.', status: 'Available', priceCents: 890000, photo: 'assets/kei-truck.webp' },
+      upcomingExample,
       { id: 'skyline-coupe', name: 'Nissan Skyline coupe', description: 'Silver two-door Skyline. Example of a sold listing.', status: 'Sold', priceCents: null, photo: 'assets/shipping.webp' },
     ],
     cart: [],
@@ -72,6 +79,9 @@ window.yumeDemo = (() => {
       try {
         const saved = localStorage.getItem(key);
         memory = { ...structuredClone(initial), ...(saved ? JSON.parse(saved) : {}) };
+        if (!memory.cars.some(car => car.id === upcomingExample.id)) {
+          memory.cars.push(structuredClone(upcomingExample));
+        }
       } catch {
         persistent = false;
       }
@@ -109,7 +119,8 @@ window.yumeDemo = (() => {
     timeZone: 'UTC', month: 'short', day: 'numeric', year: 'numeric',
   });
   function formatDate(value) {
-    return value ? calendarDate.format(new Date(value)) : '';
+    const date = value ? new Date(value) : null;
+    return date && Number.isFinite(date.getTime()) ? calendarDate.format(date) : '';
   }
 
   function groupContainers(list) {
@@ -133,6 +144,6 @@ window.yumeDemo = (() => {
 
   return {
     read, update, reset, escape, formatDate, groupContainers, timing,
-    containerStatuses, cargoOptions, inquiryStatuses, services, parts,
+    carStatuses, containerStatuses, cargoOptions, inquiryStatuses, services, parts,
   };
 })();

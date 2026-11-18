@@ -128,17 +128,21 @@ function managerInquiries({ inquiries }) {
 function managerCars(state) {
   const cars = catalog.cars(state);
   return `<div class="manager-panel-head manager-content-head">
-    <div><h2>Yume Cars</h2><p>Add listings, set a price when available, or mark a car as sold.</p></div>
+    <div><h2>Yume Cars</h2><p>Add listings, set arrival estimates for incoming cars, and update their status.</p></div>
     <button class="manager-button" type="button" data-edit="car">Add car</button>
   </div>
   <div class="manager-panel manager-inventory">${cars.map(car => {
     const image = catalog.photo(car.photo);
     const name = demo.escape(car.name);
+    const arrival = demo.formatDate(car.eta);
+    let details = 'Sold listing';
+    if (car.status === 'Available') details = car.priceCents ? catalog.price(car.priceCents) : 'Inquire for price';
+    if (car.status === 'Coming Soon') details = arrival ? 'ETA ' + arrival : 'ETA to be announced';
     return `<article class="manager-inventory-row">
       ${image ? `<img src="${demo.escape(image)}" alt="" loading="lazy">` : ''}
       <div class="manager-inventory-description">
         <h3>${name}</h3>
-        <span>${car.status === 'Available' ? (car.priceCents ? catalog.price(car.priceCents) : 'Inquire for price') : 'Sold listing'}</span>
+        <span>${demo.escape(details)}</span>
       </div>
       <div class="manager-container-status">${statusPill(car.status)}${car.hidden ? statusPill('Hidden') : ''}</div>
       <button class="manager-button secondary" type="button" data-edit="car" data-id="${demo.escape(car.id)}" aria-label="Edit ${name}">Edit</button>
@@ -233,13 +237,16 @@ function editSeason(year) {
 
 function editCar(id) {
   const item = catalog.cars().find(car => car.id === id);
+  const status = item?.status || 'Available';
   showEditor(item ? 'Edit ' + item.name : 'Add car', `<form data-editor="car" data-id="${demo.escape(id)}">
     <label>Listing name<input name="name" required maxlength="100" value="${demo.escape(item?.name)}" placeholder="Year, make, and model"></label>
     <label>Description<textarea name="description" rows="3" maxlength="700">${demo.escape(item?.description)}</textarea></label>
     <div class="manager-fields">
-      <label>Status<select name="status">${options(['Available', 'Sold'], item?.status || 'Available')}</select></label>
-      <label data-price-field ${item?.status === 'Sold' ? 'hidden' : ''}>Price in USD (optional)<input name="price" type="number" min=".01" max="999999.99" step=".01"
-        value="${item?.priceCents ? demo.escape(item.priceCents / 100) : ''}" ${item?.status === 'Sold' ? 'disabled' : ''}></label>
+      <label>Status<select name="status">${options(demo.carStatuses, status)}</select></label>
+      <label data-status-field="Available" ${status === 'Available' ? '' : 'hidden'}>Price in USD (optional)<input name="price" type="number" min=".01" max="999999.99" step=".01"
+        value="${item?.priceCents ? demo.escape(item.priceCents / 100) : ''}" ${status === 'Available' ? '' : 'disabled'}></label>
+      <label data-status-field="Coming Soon" ${status === 'Coming Soon' ? '' : 'hidden'}>Estimated arrival (optional)<input name="eta" type="date" min="1900-01-01" max="2100-12-31"
+        value="${demo.escape(item?.eta)}" ${status === 'Coming Soon' ? '' : 'disabled'}></label>
     </div>
     <label>${item?.photo ? 'Replace photo' : 'Listing photo'}<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
     <label class="manager-check"><input name="visible" type="checkbox" ${item?.hidden ? '' : 'checked'}> Show on storefront</label>
@@ -290,6 +297,7 @@ async function saveCarEditor(form, values) {
       hidden: !values.has('visible'),
       description: values.get('description').trim(),
       priceCents: status === 'Available' && amount ? Math.round(Number(amount) * 100) : null,
+      eta: status === 'Coming Soon' ? values.get('eta') : '',
     });
     return true;
   } catch (error) {
@@ -413,9 +421,10 @@ managerEditor.addEventListener('input', event => {
 
 managerEditor.addEventListener('change', event => {
   if (!event.target.matches('form[data-editor="car"] select[name="status"]')) return;
-  const priceField = event.target.form.querySelector('[data-price-field]');
-  priceField.hidden = event.target.value !== 'Available';
-  priceField.querySelector('input').disabled = priceField.hidden;
+  for (const field of event.target.form.querySelectorAll('[data-status-field]')) {
+    field.hidden = event.target.value !== field.dataset.statusField;
+    field.querySelector('input').disabled = field.hidden;
+  }
 });
 
 managerEditor.addEventListener('submit', async event => {

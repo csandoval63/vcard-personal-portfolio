@@ -45,9 +45,13 @@ const catalog = (() => {
     return hosted ? [...liveInquiries, ...state.inquiries] : state.inquiries;
   }
 
+  function canInquire(car) {
+    return !car.hidden && (car.status === 'Available' || car.status === 'Coming Soon');
+  }
+
   async function addInquiry(data) {
     if (hosted) return request('/api/inquiries', 'POST', data);
-    const car = data.kind === 'car' && cars().find(item => item.id === data.carId && item.status === 'Available');
+    const car = data.kind === 'car' && cars().find(item => item.id === data.carId && canInquire(item));
     const parts = data.kind === 'cart' ? data.items.map(line => {
       const part = demo.parts.find(item => item.id === line.id);
       return { name: part.name, quantity: line.quantity };
@@ -100,10 +104,12 @@ const catalog = (() => {
     return demo.services[item.service];
   }
 
-  return { hosted, cars, inquiries, saveCar, updateInquiry, addInquiry, refreshCars, refreshInquiries, price, photo, inquiryTitle };
+  return { hosted, cars, inquiries, saveCar, updateInquiry, addInquiry, refreshCars, refreshInquiries, price, photo, inquiryTitle, canInquire };
 })();
 
 const catalogCars = document.querySelector('#car-inventory');
+const upcomingInventory = document.querySelector('#coming-soon');
+const upcomingCars = document.querySelector('#upcoming-cars');
 const partsCatalog = document.querySelector('#parts-catalog');
 const cartCount = document.querySelector('#cart-count');
 const catalogFeedback = document.querySelector('#store-feedback');
@@ -117,26 +123,39 @@ let inquiryTarget;
 let inquiryId;
 let submittingInquiry = false;
 
+function carCard(car) {
+  const available = car.status === 'Available';
+  const upcoming = car.status === 'Coming Soon';
+  const heading = upcoming ? 'h4' : 'h3';
+  const source = catalog.photo(car.photo);
+  const name = demo.escape(car.name);
+  const arrival = upcoming && demo.formatDate(car.eta);
+  return `<article class="catalog-card">
+    ${source ? `<div class="car-photo"><img src="${demo.escape(source)}" alt="${name}" loading="lazy"></div>` :
+      upcoming ? '' : '<div class="car-photo"><span>Photo pending</span></div>'}
+    <div class="catalog-card-body">
+      <span class="listing-status ${available ? 'available' : upcoming ? 'upcoming' : ''}">${demo.escape(car.status)}</span>
+      <${heading}>${name}</${heading}>
+      <p>${demo.escape(car.description)}</p>
+      ${available ? `<p class="listing-price">${car.priceCents ? catalog.price(car.priceCents) : 'Inquire for price'}</p>` : ''}
+      ${upcoming ? `<p class="listing-eta">${arrival ? `ETA <time datetime="${demo.escape(car.eta)}">${arrival}</time>` : 'ETA to be announced'}</p>` : ''}
+      ${catalog.canInquire(car) ? `<div class="catalog-card-actions">
+        <button class="button outline" type="button" data-car-inquiry="${demo.escape(car.id)}" aria-label="Inquire about ${name}">Inquire</button>
+        ${available && !car.priceCents ? '<a class="text-action light-action" href="tel:+19512205245">Call Yume</a>' : ''}
+      </div>` : ''}
+    </div>
+  </article>`;
+}
+
 function renderCars() {
-  const filtered = catalog.cars().filter(car => !car.hidden && (carFilter === 'All' || car.status === carFilter));
-  catalogCars.innerHTML = filtered.map(car => {
-    const available = car.status === 'Available';
-    const source = catalog.photo(car.photo);
-    const name = demo.escape(car.name);
-    return `<article class="catalog-card">
-      <div class="car-photo">${source ? `<img src="${demo.escape(source)}" alt="${name}" loading="lazy">` : '<span>Photo pending</span>'}</div>
-      <div class="catalog-card-body">
-        <span class="listing-status ${available ? 'available' : ''}">${available ? 'Available' : 'Sold'}</span>
-        <h3>${name}</h3>
-        <p>${demo.escape(car.description)}</p>
-        ${available ? `<p class="listing-price">${car.priceCents ? catalog.price(car.priceCents) : 'Inquire for price'}</p>
-          <div class="catalog-card-actions">
-            <button class="button outline" type="button" data-car-inquiry="${demo.escape(car.id)}" aria-label="Inquire about ${name}">Inquire</button>
-            ${car.priceCents ? '' : '<a class="text-action light-action" href="tel:+19512205245">Call Yume</a>'}
-          </div>` : ''}
-      </div>
-    </article>`;
-  }).join('') || '<p>No cars match this filter.</p>';
+  const cars = catalog.cars().filter(car => !car.hidden);
+  const upcoming = cars.filter(car => car.status === 'Coming Soon')
+    .sort((left, right) => (left.eta || '9999').localeCompare(right.eta || '9999'));
+  const current = cars.filter(car => car.status !== 'Coming Soon' && (carFilter === 'All' || car.status === carFilter));
+  upcomingInventory.hidden = !['All', 'Coming Soon'].includes(carFilter);
+  catalogCars.hidden = carFilter === 'Coming Soon' || (carFilter === 'All' && !current.length && upcoming.length > 0);
+  catalogCars.innerHTML = current.map(carCard).join('') || '<p>No cars match this filter.</p>';
+  upcomingCars.innerHTML = upcoming.map(carCard).join('') || '<p>No upcoming cars are listed yet.</p>';
 }
 
 function renderParts() {
@@ -201,10 +220,10 @@ document.querySelector('.catalog-filters').addEventListener('click', event => {
   renderCars();
 });
 
-catalogCars.addEventListener('click', event => {
+document.querySelector('#yume-cars').addEventListener('click', event => {
   const control = event.target.closest('[data-car-inquiry]');
   if (!control) return;
-  const car = catalog.cars().find(item => item.id === control.dataset.carInquiry && item.status === 'Available' && !item.hidden);
+  const car = catalog.cars().find(item => item.id === control.dataset.carInquiry && catalog.canInquire(item));
   if (car) openCatalogInquiry({ kind: 'car', carId: car.id, name: car.name });
 });
 
@@ -283,6 +302,7 @@ window.addEventListener('yume-catalog-change', renderCars);
 renderParts();
 renderCart();
 if (catalog.hosted) {
+  upcomingInventory.hidden = true;
   catalogCars.textContent = 'Loading vehicle inventory…';
   document.querySelector('#catalog-instructions').textContent = 'Add contact details so the shop can respond to your inquiry.';
   catalog.refreshCars().catch(error => { catalogCars.textContent = error.message; });

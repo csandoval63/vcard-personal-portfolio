@@ -13,13 +13,19 @@
 .catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .95rem; }
 .catalog-card { display: flex; flex-direction: column; background: #1a2632; border: 1px solid #495b6d; min-width: 0; }
 .catalog-card-body { display: flex; flex-direction: column; align-items: start; flex: 1; padding: 1.15rem; }
-.catalog-card-body h3 { color: var(--ink); font: 800 clamp(1.85rem, 3vw, 2.45rem)/.98 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
+.catalog-card-body :is(h3, h4) { color: var(--ink); font: 800 clamp(1.85rem, 3vw, 2.45rem)/.98 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
 .catalog-card-body p { margin: .58rem 0; color: #cbd7e1; overflow-wrap: anywhere; }
 .car-photo { display: grid; place-items: center; aspect-ratio: 5 / 3; overflow: hidden; background: #293d52; color: #d9e4f0; }
 .car-photo img, .part-photo { width: 100%; height: 100%; object-fit: cover; }
 .car-photo img { object-position: center 80%; }
 .part-photo { height: auto; aspect-ratio: 5 / 2; }
 .listing-status { display: inline-block; margin-bottom: .67rem; padding: .17rem .52rem; background: #526174; color: #fff; font-size: .83rem; font-weight: 800; }
+.upcoming-inventory { border-top: 1px solid #465a70; margin-top: 2.2rem; padding-top: 1.35rem; }
+.upcoming-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .4rem 1rem; margin-bottom: 1rem; }
+.upcoming-heading h3 { font: 800 clamp(2.35rem, 4vw, 3.3rem)/.95 var(--display); text-transform: uppercase; }
+.upcoming-heading p { color: #cbd7e1; }
+.listing-status.upcoming { background: #a6c1df; color: #1b2a3a; }
+.catalog-card-body .listing-eta { color: #c5e0ff; font-weight: 900; margin-top: auto; }
 .listing-status.available { background: #ffe16e; color: #202a33; }
 .catalog-card-body .listing-price { color: #ffe16e; font-size: 1.05rem; font-weight: 900; margin-top: auto; }
 .catalog-card-actions { margin-top: .3rem; }
