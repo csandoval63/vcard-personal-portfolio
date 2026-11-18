@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#121921">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="A website concept for Yume Imported, a Japanese vehicle and parts importer in Corona, California.">
+  <title>Yume Imported — Japan to your garage</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="preload" href="assets/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="manager.css">
+  <script defer src="demo-data.js"></script>
+  <script defer src="site.js"></script>
+  <script defer src="manager.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="portfolio-preview">
+    <div class="wrap"><span>Yume Imported website preview</span><a href="../../#work">Back to portfolio</a></div>
+  </div>
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="brand" href="#top" aria-label="Yume Imported home">
+        <img class="brand-mark" src="assets/yume-logo.webp" width="48" height="48" alt="">
+        <span class="brand-word">YUME<span>IMPORTED</span></span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span></button>
+      <nav class="navigation" id="site-nav" aria-label="Main navigation">
+        <a href="#imports">Imports</a>
+        <a href="#shipping">Container shipping</a>
+        <a href="#process">How it works</a>
+        <a href="https://www.yumeimported.com/yume-store">Store</a>
+        <a href="#manager">Admin preview</a>
+      </nav>
+      <button class="button primary header-cta" type="button" data-quote>Get a quote</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <picture class="hero-photo">
+        <source media="(max-width: 48rem)" srcset="assets/hero-mobile.webp">
+        <img class="hero-image" src="assets/hero.webp" width="1080" height="800" fetchpriority="high" alt="">
+      </picture>
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="signal" aria-hidden="true"></span> Japanese imports <span class="eyebrow-divider" aria-hidden="true"></span> Est. 2014</p>
+          <h1 id="hero-title">JAPAN TO YOUR<br><em>GARAGE.</em></h1>
+          <p class="hero-description">Japanese vehicles, hard-to-find parts, and container space from Japan to Southern California.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#imports">Explore imports</a>
+            <button class="button outline" type="button" data-quote>Get a quote</button>
+          </div>
+          <details class="hero-about">
+            <summary>
+              <span>
+                <strong>About Yume Imported</strong>
+                <span class="hero-about-meaning">Yume <span lang="ja">夢</span> means “dream” in Japanese.</span>
+              </span>
+              <span class="hero-about-toggle" aria-hidden="true"></span>
+            </summary>
+            <div class="hero-about-story">
+              <p>Yume Imported started out as a hobby, and quickly turn into a direct source to bring you parts, cars and collectibles. Established in 2014 with 15 years experience in all things Japanese we know the business and seen it change throughout the years.</p>
+              <p>We offer space in container to ship parts, and specialize in off road vehicles that are used for competition or company product display. There are so many amazing things Japan has to offer, Yume can make it happen for you. Browse around or <a href="#visit-title">Contact us</a> for any questions. Domo</p>
+            </div>
+          </details>
+        </div>
+        <p class="hero-credit">Photo by Yume Imported</p>
+      </div>
+    </section>
+
+    <div class="route">
+      <div class="wrap route-inner">
+        <span class="route-label">THE IMPORT ROUTE</span>
+        <ol aria-label="Import route from Japan via Long Beach to Corona">
+          <li><i aria-hidden="true"></i><span>Japan <small>Sourcing</small></span></li>
+          <li><i aria-hidden="true"></i><span>Long Beach, CA <small>Port arrival</small></span></li>
+          <li><i aria-hidden="true"></i><span>Corona, CA <small>Warehouse pickup</small></span></li>
+        </ol>
+      </div>
+    </div>
+
+    <section class="section imports" id="imports" aria-labelledby="imports-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Yume services</p>
+            <h2 id="imports-title">What we import</h2>
+          </div>
+          <p>From a whole car to the one piece missing from your build.</p>
+        </div>
+        <div class="services">
+          <article class="service">
+            <img src="assets/vehicles.webp" loading="lazy" width="640" height="479" alt="Three Japanese cars from the Yume Imported gallery">
+            <div class="service-body">
+              <h3>Vehicles</h3>
+              <p>Kei trucks, specialty builds, and vehicles for track use or display.</p>
+              <button class="text-action light-action" type="button" data-quote="vehicle">Ask about a vehicle</button>
+            </div>
+          </article>
+          <article class="service">
+            <img src="assets/parts.webp" loading="lazy" width="900" height="600" alt="Illustrative photo of a bronze six-spoke wheel in a garage">
+            <div class="service-body">
+              <h3>Parts &amp; collectibles</h3>
+              <p>Wheels, body kits, and other finds from Yahoo! Auctions Japan and Up Garage.</p>
+              <button class="text-action light-action" type="button" data-quote="parts">Ask about a part</button>
+            </div>
+          </article>
+          <article class="service">
+            <img src="assets/shipping.webp" loading="lazy" width="640" height="488" alt="Silver Japanese coupe parked at a shipping yard">
+            <div class="service-body">
+              <h3>Container shipping</h3>
+              <p>Reserve space for parts or a vehicle headed from Japan to Corona.</p>
+              <a class="text-action light-action" href="#shipping">See shipping rates</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section shipping" id="shipping" aria-labelledby="shipping-title">
+      <div class="wrap shipping-inner">
+        <div class="shipping-copy">
+          <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Japan to California</p>
+          <h2 id="shipping-title">Container<br> shipping</h2>
+          <p>Container space is priced by availability. Shipments land in Long Beach and are unloaded in Corona. Yume contacts California customers when their shipment is ready for pickup. Additional shipping charges apply outside California.</p>
+          <button class="button dark-button" type="button" data-quote="shipping">Ask about container space</button>
+        </div>
+        <div class="rates-panel">
+          <div class="rates-heading"><h3>Shipping rates</h3><span>USD</span></div>
+          <div class="rate-tabs" role="tablist" aria-label="Shipping rate category">
+            <button type="button" role="tab" id="parts-tab" aria-selected="true" aria-controls="parts-rates">Parts</button>
+            <button type="button" role="tab" id="vehicles-tab" aria-selected="false" aria-controls="vehicle-rates" tabindex="-1">Vehicles</button>
+          </div>
+          <div id="parts-rates" role="tabpanel" aria-labelledby="parts-tab" tabindex="0"></div>
+          <div id="vehicle-rates" role="tabpanel" aria-labelledby="vehicles-tab" tabindex="0" hidden></div>
+          <p class="rate-note">Confirm current pricing, fees, and space with the shop.</p>
+        </div>
+      </div>
+      <div class="wrap shipping-extra">
+        <section class="container-board" id="containers" aria-labelledby="container-title">
+          <div class="container-heading">
+            <div>
+              <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Long Beach port · Corona pickup</p>
+              <h3 id="container-title">Container schedule</h3>
+            </div>
+            <p>Preview schedule. Confirm availability and arrival dates with Yume.</p>
+          </div>
+          <div id="container-schedule"></div>
+        </section>
+
+        <div class="shipping-details">
+          <details>
+            <summary>Parts sourcing and cost example</summary>
+            <div class="detail-body">
+              <p>Send Yume the listing you want sourced. Browse <a href="https://auctions.yahoo.co.jp/">Yahoo! Auctions Japan</a> or <a href="https://www.upgarage.com/en/ec/car-items/">Up Garage</a>. Yume also lists accounts with URAS, BN Sports, Vertex, HKS, and VeilSide.</p>
+              <h4>Example estimate for a body kit</h4>
+              <dl class="rate-list">
+                <div><dt>Yahoo! Auctions purchase</dt><dd>$1,000</dd></div>
+                <div><dt>Shipping within Japan</dt><dd>$399</dd></div>
+                <div><dt>Broker fee (15% in this example)</dt><dd>$150</dd></div>
+                <div><dt>Import shipping to Corona</dt><dd>$799</dd></div>
+                <div><dt>Import tariff (25% in this example)</dt><dd>$250</dd></div>
+                <div><dt><strong>Example total</strong></dt><dd>$2,698</dd></div>
+              </dl>
+              <p class="rate-note">Many new body kits and wheels are made to order. Yume lists lead times of about 90 days to one year, depending on production.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Vehicle paperwork and storage</summary>
+            <div class="detail-body">
+              <p>Yume lists the following fees. Ask the shop what documentation and registration options apply to your vehicle.</p>
+              <dl class="rate-list">
+                <div><dt>Virginia registration service</dt><dd>$2,000–$2,200</dd></div>
+                <div><dt>Additional handling for vehicles missing paperwork</dt><dd>$699</dd></div>
+                <div><dt>Additional Canada or Mexico registration handling</dt><dd>$699</dd></div>
+                <div><dt>Covered outdoor vehicle storage in Japan</dt><dd>$150/month</dd></div>
+              </dl>
+              <p class="rate-note">Yume’s listed registration services exclude California.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Services in Japan</summary>
+            <div class="detail-body">
+              <ul>
+                <li>Sourcing and shipping for rolling chassis, motorcycles, scooters, high-end vehicles, and personal or business items</li>
+                <li>Mechanical service and dedicated container coordination</li>
+                <li>Vehicle registration assistance during a visit to Japan</li>
+                <li>Covered outdoor storage</li>
+              </ul>
+              <p>For other requests, use the <a href="https://www.yumeimported.com/">official Yume Imported site</a> or call the shop.</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section process" id="process" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> From search to pickup</p>
+            <h2 id="process-title">How it works</h2>
+          </div>
+        </div>
+        <ol class="steps">
+          <li><h3>Share what you want</h3><p>Tell Yume the model, part number, or listing you found. Include any fitment details that matter to your build.</p></li>
+          <li><h3>Confirm the details</h3><p>Check sourcing options, estimated costs, and available container space before you decide.</p></li>
+          <li><h3>Pick up in Corona</h3><p>Yume contacts customers once their shipment arrives. Ask the shop about onward shipping if you’re outside California.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="visit" aria-labelledby="visit-title">
+      <div class="wrap visit-inner">
+        <div>
+          <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Corona, California</p>
+          <h2 id="visit-title">Visit Yume Imported</h2>
+          <address>1655 E. 6th Street, Suite A5B<br>Corona, CA 92879</address>
+          <div class="visit-actions">
+            <a class="button primary" href="tel:+19512205245">Call (951) 220-5245</a>
+            <a class="button outline" href="https://www.google.com/maps/search/?api=1&amp;query=Yume+Imported+1655+E+6th+Street+Corona+CA+92879">Get directions</a>
+          </div>
+        </div>
+        <div class="hours">
+          <h3>Shop hours</h3>
+          <dl>
+            <div><dt>Mon–Fri</dt><dd>2–10 PM</dd></div>
+            <div><dt>Saturday</dt><dd>By appointment</dd></div>
+            <div><dt>Sunday</dt><dd>Closed</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="brand" href="#top" aria-label="Yume Imported, back to top">
+        <img class="brand-mark" src="assets/yume-logo.webp" width="48" height="48" alt="">
+        <span class="brand-word">YUME<span>IMPORTED</span></span>
+      </a>
+      <p>Website demo for Yume Imported.</p>
+      <div class="footer-links">
+        <a href="#manager">Admin preview</a>
+        <a href="https://www.instagram.com/yumeimported/">@yumeimported</a>
+        <a href="https://www.yumeimported.com/">Official site</a>
+      </div>
+    </div>
+  </footer>
+
+  <main class="manager" id="manager-view" aria-labelledby="manager-title" hidden>
+    <header class="manager-header">
+      <div class="wrap manager-header-inner">
+        <a class="brand" href="#top" aria-label="Yume Imported storefront">
+          <img class="brand-mark" src="assets/yume-logo.webp" width="48" height="48" alt="">
+          <span class="brand-word">YUME<span>IMPORTED</span></span>
+        </a>
+        <nav class="manager-switch" aria-label="Demo views">
+          <a href="#top">Storefront</a>
+          <span aria-current="page">Admin preview</span>
+        </nav>
+      </div>
+    </header>
+    <div class="wrap manager-body">
+      <p class="manager-banner"><strong>Owner demo</strong> <span>Updates appear on this demo in the same browser.</span></p>
+      <div class="manager-title-row">
+        <div><p class="manager-kicker">Yume Imported</p><h1 id="manager-title" tabindex="-1">Import manager</h1></div>
+        <a class="manager-button secondary" href="#containers">View storefront schedule</a>
+      </div>
+      <nav class="manager-nav" aria-label="Admin sections">
+        <button type="button" data-manager-tab="overview" aria-current="page">Overview</button>
+        <button type="button" data-manager-tab="containers">Containers</button>
+        <button type="button" data-manager-tab="inquiries">Inquiries</button>
+        <button type="button" data-manager-tab="rates">Shipping rates</button>
+      </nav>
+      <div id="manager-notice" class="manager-notice" role="status"></div>
+      <div id="manager-panel"></div>
+    </div>
+  </main>
+
+  <dialog class="manager-dialog" id="manager-editor" aria-labelledby="manager-dialog-title">
+    <div class="manager-dialog-head">
+      <h2 id="manager-dialog-title"></h2>
+      <button class="manager-close" type="button" data-close-editor aria-label="Close editor">×</button>
+    </div>
+    <div id="manager-editor-body"></div>
+  </dialog>
+
+  <dialog class="quote-dialog" id="quote-dialog" aria-labelledby="quote-title">
+    <div class="dialog-top">
+      <div>
+        <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Demo inquiry</p>
+        <h2 id="quote-title">Get a quote</h2>
+      </div>
+      <button class="close-dialog" type="button" aria-label="Close quote form">×</button>
+    </div>
+    <p id="quote-intro">Use sample details to try the demo inbox. Saved inquiries stay in this browser.</p>
+    <form id="quote-form">
+      <label for="quote-service">What are you looking for?</label>
+      <select id="quote-service" name="service" required>
+        <option value="">Choose a service</option>
+        <option value="vehicle">Source a vehicle</option>
+        <option value="parts">Source parts or collectibles</option>
+        <option value="shipping">Reserve container space</option>
+      </select>
+      <label for="quote-details">Vehicle or parts details</label>
+      <textarea id="quote-details" name="details" rows="4" required maxlength="1200" placeholder="Year, model, part number, or a link to the listing"></textarea>
+      <button class="button primary" type="submit">Preview inquiry</button>
+    </form>
+    <section id="quote-preview" aria-labelledby="preview-title" hidden>
+      <h3 id="preview-title" tabindex="-1">Your inquiry draft</h3>
+      <textarea id="quote-draft" aria-label="Inquiry draft" rows="6" readonly></textarea>
+      <div class="draft-actions">
+        <button class="button primary" id="save-inquiry" type="button">Save to demo inbox</button>
+        <button class="button outline" id="copy-draft" type="button">Copy draft</button>
+        <button class="button outline" id="edit-draft" type="button">Edit inquiry</button>
+      </div>
+      <p class="copy-status" id="copy-status" role="status"></p>
+    </section>
+  </dialog>
+</body>
+</html>
