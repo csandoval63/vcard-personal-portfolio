@@ -1,0 +1,62 @@
+.inventory { background: #161f2a; border-top: 1px solid #394b5b; }
+.parts-store { background: #121920; border-top: 1px solid #394b5b; }
+.catalog-filters, .store-toolbar, .catalog-card-actions { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; }
+.catalog-filters, .store-toolbar { margin-bottom: 1rem; }
+.catalog-filters button { min-height: 2.6rem; padding: .45rem .95rem; border: 1px solid #6c8195; color: var(--ink); background: #1b2a3a; font-weight: 800; }
+.catalog-filters button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #192332; }
+.catalog-filters button:hover:not([aria-pressed="true"]) { background: #34516a; }
+.store-toolbar { justify-content: space-between; }
+.store-feedback { flex: 1; min-width: min(100%, 12rem); color: #d2dce5; font-size: .94rem; }
+.store-feedback:empty { display: none; }
+#view-cart { margin-left: auto; }
+.cart-count { margin-left: .5rem; padding: .19rem .38rem; min-width: 1.55rem; background: #243b53; color: #fff0be; }
+.catalog-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .95rem; }
+.catalog-card { display: flex; flex-direction: column; background: #1a2632; border: 1px solid #495b6d; min-width: 0; }
+.catalog-card-body { display: flex; flex-direction: column; align-items: start; flex: 1; padding: 1.15rem; }
+.catalog-card-body h3 { color: var(--ink); font: 800 clamp(1.85rem, 3vw, 2.45rem)/.98 var(--display); text-transform: uppercase; overflow-wrap: anywhere; }
+.catalog-card-body p { margin: .58rem 0; color: #cbd7e1; overflow-wrap: anywhere; }
+.car-photo { display: grid; place-items: center; aspect-ratio: 5 / 3; overflow: hidden; background: #293d52; color: #d9e4f0; }
+.car-photo img, .part-photo { width: 100%; height: 100%; object-fit: cover; }
+.car-photo img { object-position: center 80%; }
+.part-photo { height: auto; aspect-ratio: 5 / 2; }
+.listing-status { display: inline-block; margin-bottom: .67rem; padding: .17rem .52rem; background: #526174; color: #fff; font-size: .83rem; font-weight: 800; }
+.listing-status.available { background: #ffe16e; color: #202a33; }
+.catalog-card-body .listing-price { color: #ffe16e; font-size: 1.05rem; font-weight: 900; margin-top: auto; }
+.catalog-card-actions { margin-top: .3rem; }
+.catalog-card-actions .light-action { margin-top: 0; }
+.catalog-card-actions .button, .part-card .button { min-height: 2.6rem; }
+.part-card .part-category { margin-top: 0; color: #ffdf70; font: 700 .81rem/1.45 var(--mono); text-transform: uppercase; }
+.part-card .button { margin-top: auto; }
+.part-card h3 + p { margin-bottom: 1rem; }
+.catalog-inquiry-form { display: grid; gap: .64rem; margin-top: .8rem; }
+.catalog-inquiry-form label { display: grid; gap: .27rem; font-weight: 700; }
+.catalog-inquiry-form label span { display: inline; color: #cbd8e8; font-weight: 400; }
+.catalog-inquiry-form input { width: 100%; padding: .68rem .72rem; background: #111a23; border: 1px solid #7891a9; color: var(--ink); }
+.catalog-inquiry-form textarea { margin: 0; }
+.catalog-inquiry-form .button { justify-self: start; margin-top: .25rem; }
+#catalog-instructions { color: #c8d3e0; }
+#catalog-inquiry-items { margin-top: .78rem; font-weight: 700; }
+.cart-lines { list-style: none; padding: 0; margin: 0; border-block: 1px solid #65798d; }
+.cart-lines li { display: flex; justify-content: space-between; align-items: center; gap: .55rem; padding: .53rem 0; }
+.cart-lines li + li { border-top: 1px solid #455a70; }
+.cart-quantity { display: flex; align-items: center; gap: .48rem; }
+.cart-quantity button { min-width: 2.1rem; height: 2.1rem; background: #26394d; border: 1px solid #7188a0; color: #f3f6fb; font-weight: 800; }
+.catalog-response { margin-top: .7rem; color: #ffe487; }
+.catalog-response:empty { display: none; }
+.manager-inventory-row { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem .8rem; padding: .5rem 0; }
+.manager-inventory-row + .manager-inventory-row { border-top: 1px solid #d7e1eb; }
+.manager-inventory-row img { width: 4.8rem; aspect-ratio: 4 / 3; object-fit: cover; }
+.manager-inventory-description { flex: 1 1 9rem; overflow-wrap: anywhere; }
+.manager-inventory-description h3 { font-size: 1.08rem; }
+.manager-inventory-description span { color: #506478; font-size: .9rem; }
+.manager-meta { overflow-wrap: anywhere; }
+.inquiry-line-items { margin: .45rem 0; padding-left: 1.15rem; font-weight: 700; }
+.manager-dialog textarea { width: 100%; min-width: 0; padding: .4rem .55rem; border: 1px solid #9aafc4; resize: vertical; background: white; color: #18334d; }
+.manager-form-error { color: #863008; }
+.manager-form-error:empty { display: none; }
+@media (max-width: 48rem) {
+  .catalog-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 35rem) {
+  .catalog-grid { grid-template-columns: minmax(0, 1fr); }
+}

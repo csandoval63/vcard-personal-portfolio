@@ -74,7 +74,7 @@ document.querySelectorAll('[data-quote]').forEach((button) => {
   });
 });
 
-document.querySelector('.close-dialog').addEventListener('click', () => dialog.close());
+document.querySelector('#close-quote-dialog').addEventListener('click', () => dialog.close());
 
 details.addEventListener('input', () => details.setCustomValidity(''));
 

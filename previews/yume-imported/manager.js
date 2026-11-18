@@ -22,6 +22,9 @@ function syncDemoView() {
 
   if (isManager) {
     renderManager();
+    if (catalog.hosted) catalog.refreshInquiries().then(() => {
+      if (!manager.hidden && ['overview', 'inquiries'].includes(managerSection)) renderManager();
+    }).catch(error => { managerNotice.textContent = error.message; });
     window.scrollTo({ top: 0, behavior: 'instant' });
     managerTitle.focus({ preventScroll: true });
     return;
@@ -32,7 +35,7 @@ function syncDemoView() {
 }
 
 function statusPill(text) {
-  const positive = ['Open', 'New', 'Arrived'].includes(text);
+  const positive = ['Available', 'Open', 'New', 'Arrived'].includes(text);
   return `<span class="manager-pill ${positive ? 'positive' : ''}">${demo.escape(text)}</span>`;
 }
 
@@ -61,8 +64,8 @@ function managerOverview({ containers, rates, inquiries }) {
     <section class="manager-panel">
       <div class="manager-panel-head"><div><h2>Recent inquiries</h2><p>Example requests and drafts saved from the storefront.</p></div></div>
       ${inquiries.slice(0, 4).map(item => `<div class="manager-list-row"><div>
-        <strong>${demo.escape(demo.services[item.service])}</strong>
-        <span>${demo.escape(item.details)}</span>
+        <strong>${demo.escape(catalog.inquiryTitle(item))}</strong>
+        <span>${demo.escape(item.details || item.items?.map(line => line.name).join(", "))}</span>
       </div>${statusPill(item.status)}</div>`).join('') || '<p class="manager-empty">No demo inquiries yet.</p>'}
       <button class="manager-button secondary panel-footer-action" type="button" data-manager-go="inquiries">Open inbox</button>
     </section>
@@ -99,8 +102,12 @@ function inquiryList(inquiries) {
   return matching.map(item => `<article class="manager-panel manager-inquiry">
     <div>
       <p class="manager-meta">${demo.escape(item.id)} · ${demo.formatDate(item.created)}</p>
-      <h3>${demo.escape(demo.services[item.service])}</h3>
-      <p class="manager-inquiry-details">${demo.escape(item.details)}</p>
+      <h3>${demo.escape(catalog.inquiryTitle(item))}</h3>
+      ${item.customer ? `<p>${demo.escape(item.customer)} · ${demo.escape(item.email)}</p>` : ''}
+      ${item.items?.length ? `<ul class="inquiry-line-items">${item.items.map(line =>
+        `<li>${demo.escape(line.name)}${item.kind === 'cart' ? ' × ' + demo.escape(line.quantity) : ''}</li>`
+      ).join('')}</ul>` : ''}
+      ${item.details ? `<p class="manager-inquiry-details">${demo.escape(item.details)}</p>` : ''}
     </div>
     <label>Status<select data-inquiry-id="${demo.escape(item.id)}" aria-label="Status for inquiry ${demo.escape(item.id)}">
       ${options(demo.inquiryStatuses, item.status)}
@@ -116,6 +123,27 @@ function managerInquiries({ inquiries }) {
     </select></label>
   </div>
   <div id="manager-inquiry-list">${inquiryList(inquiries)}</div>`;
+}
+
+function managerCars(state) {
+  const cars = catalog.cars(state);
+  return `<div class="manager-panel-head manager-content-head">
+    <div><h2>Yume Cars</h2><p>Add listings, set a price when available, or mark a car as sold.</p></div>
+    <button class="manager-button" type="button" data-edit="car">Add car</button>
+  </div>
+  <div class="manager-panel manager-inventory">${cars.map(car => {
+    const image = catalog.photo(car.photo);
+    const name = demo.escape(car.name);
+    return `<article class="manager-inventory-row">
+      ${image ? `<img src="${demo.escape(image)}" alt="" loading="lazy">` : ''}
+      <div class="manager-inventory-description">
+        <h3>${name}</h3>
+        <span>${car.status === 'Available' ? (car.priceCents ? catalog.price(car.priceCents) : 'Inquire for price') : 'Sold listing'}</span>
+      </div>
+      <div class="manager-container-status">${statusPill(car.status)}${car.hidden ? statusPill('Hidden') : ''}</div>
+      <button class="manager-button secondary" type="button" data-edit="car" data-id="${demo.escape(car.id)}" aria-label="Edit ${name}">Edit</button>
+    </article>`;
+  }).join('') || '<p class="manager-empty">No cars listed yet.</p>'}</div>`;
 }
 
 function managerRates({ rates }) {
@@ -134,12 +162,14 @@ function managerRates({ rates }) {
 const managerViews = {
   overview: managerOverview,
   containers: managerContainers,
+  cars: managerCars,
   inquiries: managerInquiries,
   rates: managerRates,
 };
 
 function renderManager() {
-  managerPanel.innerHTML = managerViews[managerSection](demo.read());
+  const state = demo.read();
+  managerPanel.innerHTML = managerViews[managerSection]({ ...state, inquiries: catalog.inquiries(state) });
 }
 
 function selectSection(section) {
@@ -199,6 +229,75 @@ function editSeason(year) {
     <p>Leave blank to remove the start date from the storefront schedule.</p>
     ${editorActions()}
   </form>`);
+}
+
+function editCar(id) {
+  const item = catalog.cars().find(car => car.id === id);
+  showEditor(item ? 'Edit ' + item.name : 'Add car', `<form data-editor="car" data-id="${demo.escape(id)}">
+    <label>Listing name<input name="name" required maxlength="100" value="${demo.escape(item?.name)}" placeholder="Year, make, and model"></label>
+    <label>Description<textarea name="description" rows="3" maxlength="700">${demo.escape(item?.description)}</textarea></label>
+    <div class="manager-fields">
+      <label>Status<select name="status">${options(['Available', 'Sold'], item?.status || 'Available')}</select></label>
+      <label data-price-field ${item?.status === 'Sold' ? 'hidden' : ''}>Price in USD (optional)<input name="price" type="number" min=".01" max="999999.99" step=".01"
+        value="${item?.priceCents ? demo.escape(item.priceCents / 100) : ''}" ${item?.status === 'Sold' ? 'disabled' : ''}></label>
+    </div>
+    <label>${item?.photo ? 'Replace photo' : 'Listing photo'}<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+    <label class="manager-check"><input name="visible" type="checkbox" ${item?.hidden ? '' : 'checked'}> Show on storefront</label>
+    <p class="manager-form-error" role="alert"></p>
+    ${editorActions(item ? 'Save changes' : 'Add car')}
+  </form>`);
+}
+
+async function prepareListingPhoto(file) {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 10000000) {
+    throw new Error('Choose a JPEG, PNG, or WebP photo under 10 MB.');
+  }
+  const source = await createImageBitmap(file).catch(() => { throw new Error('This image could not be opened.'); });
+  try {
+    const canvas = document.createElement('canvas');
+    const scale = Math.min(1, 850 / Math.max(source.width, source.height));
+    canvas.width = Math.max(1, Math.round(source.width * scale));
+    canvas.height = Math.max(1, Math.round(source.height * scale));
+    canvas.getContext('2d').drawImage(source, 0, 0, canvas.width, canvas.height);
+    const encoded = catalog.photo(canvas.toDataURL('image/webp', .73));
+    if (!encoded) throw new Error('This photo is too large after compression. Choose a smaller image.');
+    return encoded;
+  } finally {
+    source.close();
+  }
+}
+
+async function saveCarEditor(form, values) {
+  const name = values.get('name').trim();
+  const errorMessage = form.querySelector('.manager-form-error');
+  const submit = form.querySelector('button[type="submit"]');
+  errorMessage.textContent = '';
+  if (!name) {
+    errorMessage.textContent = 'Enter a listing name.';
+    return false;
+  }
+
+  submit.disabled = true;
+  try {
+    const id = form.dataset.id || crypto.randomUUID();
+    const previous = catalog.cars().find(item => item.id === id);
+    const file = values.get('photo');
+    const photo = file.size ? await prepareListingPhoto(file) : previous?.photo || '';
+    const status = values.get('status');
+    const amount = values.get('price');
+    await catalog.saveCar({
+      id, name, photo, status,
+      hidden: !values.has('visible'),
+      description: values.get('description').trim(),
+      priceCents: status === 'Available' && amount ? Math.round(Number(amount) * 100) : null,
+    });
+    return true;
+  } catch (error) {
+    errorMessage.textContent = error.message;
+    return false;
+  } finally {
+    submit.disabled = false;
+  }
 }
 
 function editRate(category, id) {
@@ -263,6 +362,7 @@ function saveRate(form, values) {
 
 const editorActionsByType = {
   container(button) { editContainer(button.dataset.id); },
+  car(button) { editCar(button.dataset.id); },
   season(button) { editSeason(Number(button.dataset.id)); },
   rate(button) { editRate(button.dataset.category, button.dataset.id); },
   reset: confirmReset,
@@ -276,21 +376,28 @@ manager.addEventListener('click', event => {
   if (button.dataset.edit) editorActionsByType[button.dataset.edit](button);
 });
 
-managerPanel.addEventListener('change', event => {
+managerPanel.addEventListener('change', async event => {
   const select = event.target;
   const id = select.dataset.inquiryId;
   if (select.id === 'inquiry-filter') {
     inquiryFilter = select.value;
-    document.querySelector('#manager-inquiry-list').innerHTML = inquiryList(demo.read().inquiries);
+    document.querySelector('#manager-inquiry-list').innerHTML = inquiryList(catalog.inquiries());
     return;
   }
   if (!id) return;
 
-  demo.update(state => {
-    state.inquiries.find(item => item.id === id).status = select.value;
-  });
+  select.disabled = true;
+  try {
+    await catalog.updateInquiry(id, select.value);
+  } catch (error) {
+    managerNotice.textContent = error.message;
+    select.value = catalog.inquiries().find(item => item.id === id).status;
+    return;
+  } finally {
+    select.disabled = false;
+  }
   if (inquiryFilter) {
-    document.querySelector('#manager-inquiry-list').innerHTML = inquiryList(demo.read().inquiries);
+    document.querySelector('#manager-inquiry-list').innerHTML = inquiryList(catalog.inquiries());
     document.querySelector('#inquiry-filter').focus();
   }
   managerNotice.textContent = `Inquiry ${id} updated.`;
@@ -304,12 +411,20 @@ managerEditor.addEventListener('input', event => {
   if (event.target instanceof HTMLInputElement) event.target.setCustomValidity('');
 });
 
-managerEditor.addEventListener('submit', event => {
+managerEditor.addEventListener('change', event => {
+  if (!event.target.matches('form[data-editor="car"] select[name="status"]')) return;
+  const priceField = event.target.form.querySelector('[data-price-field]');
+  priceField.hidden = event.target.value !== 'Available';
+  priceField.querySelector('input').disabled = priceField.hidden;
+});
+
+managerEditor.addEventListener('submit', async event => {
   event.preventDefault();
   const form = event.target;
   const values = new FormData(form);
   const editor = form.dataset.editor;
   if (editor === 'container' && !saveContainer(form, values)) return;
+  if (editor === 'car' && !(await saveCarEditor(form, values))) return;
   if (editor === 'rate' && !saveRate(form, values)) return;
   if (editor === 'season') demo.update(state => { state.seasonStarts[form.dataset.id] = values.get('start'); });
   if (editor === 'reset') demo.reset();
@@ -325,6 +440,13 @@ skipLink.addEventListener('click', event => {
   event.preventDefault();
   managerTitle.focus();
 });
+
+if (catalog.hosted) {
+  document.querySelector('.manager-banner span').textContent = 'Vehicle listings and store and vehicle inquiries are shared across signed-in sessions.';
+  window.addEventListener('yume-catalog-change', () => {
+    if (!manager.hidden && managerSection === 'cars') renderManager();
+  });
+}
 
 window.addEventListener('hashchange', syncDemoView);
 syncDemoView();

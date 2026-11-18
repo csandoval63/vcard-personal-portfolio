@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#121921">
   <meta name="robots" content="noindex, nofollow">
@@ -12,11 +12,13 @@
   <link rel="preload" href="assets/barlow-condensed-800.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="manager.css">
+  <link rel="stylesheet" href="catalog.css">
   <script defer src="demo-data.js"></script>
   <script defer src="site.js"></script>
+  <script defer src="catalog.js"></script>
   <script defer src="manager.js"></script>
 </head>
-<body>
+<body data-mode="demo">
   <a class="skip" href="#main">Skip to content</a>
   <div class="portfolio-preview">
     <div class="wrap"><span>Yume Imported website preview</span><a href="../../#work">Back to portfolio</a></div>
@@ -29,10 +31,9 @@
       </a>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation"><span></span><span></span></button>
       <nav class="navigation" id="site-nav" aria-label="Main navigation">
-        <a href="#imports">Imports</a>
+        <a href="#yume-cars">Yume Cars</a>
+        <a href="#yume-store">Yume Store</a>
         <a href="#shipping">Container shipping</a>
-        <a href="#process">How it works</a>
-        <a href="https://www.yumeimported.com/yume-store">Store</a>
         <a href="#manager">Admin preview</a>
       </nav>
       <button class="button primary header-cta" type="button" data-quote>Get a quote</button>
@@ -51,7 +52,7 @@
           <h1 id="hero-title">JAPAN TO YOUR<br><em>GARAGE.</em></h1>
           <p class="hero-description">Japanese vehicles, hard-to-find parts, and container space from Japan to Southern California.</p>
           <div class="hero-actions">
-            <a class="button primary" href="#imports">Explore imports</a>
+            <a class="button primary" href="#yume-cars">Explore Yume Cars</a>
             <button class="button outline" type="button" data-quote>Get a quote</button>
           </div>
           <details class="hero-about">
@@ -98,7 +99,7 @@
             <div class="service-body">
               <h3>Vehicles</h3>
               <p>Kei trucks, specialty builds, and vehicles for track use or display.</p>
-              <button class="text-action light-action" type="button" data-quote="vehicle">Ask about a vehicle</button>
+              <a class="text-action light-action" href="#yume-cars">Browse Yume Cars</a>
             </div>
           </article>
           <article class="service">
@@ -106,7 +107,7 @@
             <div class="service-body">
               <h3>Parts &amp; collectibles</h3>
               <p>Wheels, body kits, and other finds from Yahoo! Auctions Japan and Up Garage.</p>
-              <button class="text-action light-action" type="button" data-quote="parts">Ask about a part</button>
+              <a class="text-action light-action" href="#yume-store">Browse Yume Store</a>
             </div>
           </article>
           <article class="service">
@@ -118,6 +119,41 @@
             </div>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="section inventory" id="yume-cars" aria-labelledby="cars-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Vehicle inventory</p>
+            <h2 id="cars-title">Yume Cars</h2>
+          </div>
+          <p>Browse example listings. Ask about a car to see how the inquiry gets to the shop.</p>
+        </div>
+        <div class="catalog-filters" role="group" aria-label="Filter cars">
+          <button type="button" data-car-filter="All" aria-pressed="true">All</button>
+          <button type="button" data-car-filter="Available" aria-pressed="false">Available</button>
+          <button type="button" data-car-filter="Sold" aria-pressed="false">Sold</button>
+        </div>
+        <div id="car-inventory" class="catalog-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="section parts-store" id="yume-store" aria-labelledby="store-title">
+      <div class="wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Parts sourcing</p>
+            <h2 id="store-title">Yume Store</h2>
+          </div>
+          <p>Add the parts you need to an inquiry cart. The shop can follow up with availability, pricing, and shipping.</p>
+        </div>
+        <div class="store-toolbar">
+          <p class="store-feedback" id="store-feedback" role="status"></p>
+          <button class="button primary" type="button" id="view-cart">Inquiry cart <span id="cart-count" class="cart-count">0</span></button>
+        </div>
+        <div id="parts-catalog" class="catalog-grid"></div>
       </div>
     </section>
 
@@ -266,13 +302,14 @@
       </div>
     </header>
     <div class="wrap manager-body">
-      <p class="manager-banner"><strong>Owner demo</strong> <span>Updates appear on this demo in the same browser.</span></p>
+      <p class="manager-banner"><strong>Owner demo</strong> <span>Car listings and inquiries in this portfolio demo stay in the same browser.</span></p>
       <div class="manager-title-row">
         <div><p class="manager-kicker">Yume Imported</p><h1 id="manager-title" tabindex="-1">Import manager</h1></div>
         <a class="manager-button secondary" href="#containers">View storefront schedule</a>
       </div>
       <nav class="manager-nav" aria-label="Admin sections">
         <button type="button" data-manager-tab="overview" aria-current="page">Overview</button>
+        <button type="button" data-manager-tab="cars">Yume Cars</button>
         <button type="button" data-manager-tab="containers">Containers</button>
         <button type="button" data-manager-tab="inquiries">Inquiries</button>
         <button type="button" data-manager-tab="rates">Shipping rates</button>
@@ -296,7 +333,7 @@
         <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Demo inquiry</p>
         <h2 id="quote-title">Get a quote</h2>
       </div>
-      <button class="close-dialog" type="button" aria-label="Close quote form">×</button>
+      <button class="close-dialog" id="close-quote-dialog" type="button" aria-label="Close quote form">×</button>
     </div>
     <p id="quote-intro">Use sample details to try the demo inbox. Saved inquiries stay in this browser.</p>
     <form id="quote-form">
@@ -321,6 +358,24 @@
       </div>
       <p class="copy-status" id="copy-status" role="status"></p>
     </section>
+  </dialog>
+  <dialog class="quote-dialog" id="catalog-dialog" aria-labelledby="catalog-dialog-title">
+    <div class="dialog-top">
+      <div>
+        <p class="eyebrow accent"><span class="signal" aria-hidden="true"></span> Inquiry</p>
+        <h2 id="catalog-dialog-title"></h2>
+      </div>
+      <button class="close-dialog" type="button" id="close-catalog-dialog" aria-label="Close inquiry">×</button>
+    </div>
+    <p id="catalog-instructions">Use sample contact details to try the inbox in this browser.</p>
+    <div id="catalog-inquiry-items"></div>
+    <form id="catalog-inquiry-form" class="catalog-inquiry-form">
+      <label>Name<input name="customer" type="text" maxlength="100" autocomplete="name" required></label>
+      <label>Email<input name="email" type="email" maxlength="160" autocomplete="email" required></label>
+      <label>Message <span>(optional)</span><textarea name="message" maxlength="1200" rows="3" placeholder="Vehicle fitment, pickup, or shipping questions"></textarea></label>
+      <button class="button primary" type="submit">Send inquiry</button>
+    </form>
+    <p class="catalog-response" id="catalog-response" role="status" tabindex="-1"></p>
   </dialog>
 </body>
 </html>

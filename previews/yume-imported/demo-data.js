@@ -9,7 +9,19 @@ window.yumeDemo = (() => {
     shipping: 'Container shipping',
   };
 
+  const parts = [
+    { id: 'nankang-ns2r', reference: '165/55R14 · Set of 4', name: 'Nankang NS-2R tires', description: 'Ask about this size and container availability.' },
+    { id: 'wheel-set', reference: 'Wheels', name: 'Japanese alloy wheel set', description: 'Include your diameter, bolt pattern, and offset.', photo: 'assets/parts.webp' },
+    { id: 'body-kit', reference: 'Exterior', name: 'Body kit sourcing', description: 'Include your chassis code and the kit or brand you’re looking for.' },
+  ];
   const initial = {
+    cars: [
+      { id: 'skyline-sedan', name: 'Nissan Skyline sedan', description: 'Purple four-door Skyline. Ask about the vehicle and inspection details.', status: 'Available', priceCents: null, photo: 'assets/hero.webp' },
+      { id: 'kei-truck', name: 'Japanese kei truck', description: 'Compact pickup with a drop-side bed. Example listing.', status: 'Available', priceCents: 890000, photo: 'assets/kei-truck.webp' },
+      { id: 'skyline-coupe', name: 'Nissan Skyline coupe', description: 'Silver two-door Skyline. Example of a sold listing.', status: 'Sold', priceCents: null, photo: 'assets/shipping.webp' },
+    ],
+    cart: [],
+
     containers: [
       { id: '26-1', number: '1', year: 2026, status: 'Closed', arrival: '2026-02-28' },
       { id: '26-2', number: '2', year: 2026, status: 'Arrived', arrival: '2026-10-30' },
@@ -59,7 +71,7 @@ window.yumeDemo = (() => {
     if (persistent) {
       try {
         const saved = localStorage.getItem(key);
-        memory = saved ? JSON.parse(saved) : structuredClone(initial);
+        memory = { ...structuredClone(initial), ...(saved ? JSON.parse(saved) : {}) };
       } catch {
         persistent = false;
       }
@@ -121,6 +133,6 @@ window.yumeDemo = (() => {
 
   return {
     read, update, reset, escape, formatDate, groupContainers, timing,
-    containerStatuses, cargoOptions, inquiryStatuses, services,
+    containerStatuses, cargoOptions, inquiryStatuses, services, parts,
   };
 })();
