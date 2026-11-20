@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#293c23">
+  <meta name="robots" content="noindex">
+  <meta name="description" content="An independent ordering demo for The Organic Blend in Jurupa Valley. Explore juices, ginger shots, and açaí bowls.">
+  <title>The Organic Blend | Storefront Concept</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="store.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="demo-bar"><a href="../../#work">Back to portfolio</a><span>Independent website concept · Demo checkout only</span></div>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="wordmark" href="#" aria-label="The Organic Blend home"><span>THE ORGANIC</span><em>Blend</em></a>
+      <nav aria-label="Main navigation"><a href="#menu">Menu</a><a href="#pop-ups">Pop-ups</a><button type="button" data-view="track">Track order</button></nav>
+      <button class="button bag-button" data-view="bag" type="button">Bag <span id="bag-count">0</span></button>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Jurupa Valley, California</p>
+          <h1>Fuel your body.<br><em>Elevate your life.</em></h1>
+          <p class="hero-description">Cold-pressed juices, ginger shots, and açaí bowls made fresh to order.</p>
+          <div class="actions"><a href="#menu" class="button">Explore the menu</a><a href="#pop-ups" class="underlink">Find a pop-up</a></div>
+        </div>
+        <div class="hero-photo"><img src="media/hero.webp" alt="Illustration of cold-pressed juices and a berry açaí bowl in warm sunlight" width="1100" height="825" fetchpriority="high"></div>
+      </div>
+    </section>
+    <div class="quick-pick">
+      <div class="wrap">
+        <button type="button" data-category="juices"><span>Cold-pressed juices</span><small>Four flavors · From $7</small></button>
+        <button type="button" data-category="bowls"><span>Açaí bowls</span><small>House combinations or build your own · $10</small></button>
+        <button type="button" data-category="shots"><span>Ginger shots</span><small>Single shots and six-packs · From $3</small></button>
+      </div>
+    </div>
+    <section class="wrap section" id="menu" aria-labelledby="menu-title">
+      <div class="section-heading"><h2 id="menu-title">Explore the menu.</h2></div>
+      <div class="category-list" aria-label="Menu categories">
+        <button type="button" data-tab="juices" aria-pressed="true">Cold-pressed juices</button>
+        <button type="button" data-tab="bowls" aria-pressed="false">Açaí bowls</button>
+        <button type="button" data-tab="shots" aria-pressed="false">Ginger shots</button>
+      </div>
+      <div id="menu-items"></div>
+    </section>
+    <section class="pickup-section" id="pop-ups" aria-labelledby="pop-ups-title">
+      <div class="wrap section pickup-grid">
+        <div>
+          <p class="eyebrow">Jurupa Valley &amp; nearby</p>
+          <h2 id="pop-ups-title">Find us at a pop-up.</h2>
+          <p>Follow <a class="underlink" href="https://www.instagram.com/theorganicblend_/" target="_blank" rel="noopener noreferrer">@theorganicblend_</a> for the latest dates, locations, and availability.</p>
+        </div>
+        <article class="event">
+          <div class="event-date"><span>DEC</span><strong>5</strong></div>
+          <div><h3>Medspa Grand Opening</h3><p>Saturday, December 5 · 10 a.m.–1 p.m.</p><p>9033 Baseline Rd, Suite N, Rancho Cucamonga, CA</p></div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <main id="manager" class="wrap section ops" hidden></main>
+  <main id="driver" class="wrap section ops" hidden></main>
+  <footer class="footer">
+    <div class="wrap">
+      <a class="wordmark" href="#" aria-label="The Organic Blend home"><span>THE ORGANIC</span><em>Blend</em></a>
+      <nav aria-label="Demo views"><a href="#menu">Storefront</a><a href="#storemanager">Store manager</a><a href="#driver">Driver view</a></nav>
+      <p>Independent portfolio concept. Product imagery is illustrative. Orders and payments are simulated in this browser.</p>
+    </div>
+  </footer>
+  <button id="mobile-bag" class="button mobile-bag" type="button" data-view="bag" hidden></button>
+  <dialog id="sheet" aria-labelledby="sheet-title">
+    <div class="sheet-header"><h2 id="sheet-title"></h2><button type="button" class="close" data-close aria-label="Close dialog">×</button></div>
+    <div id="sheet-content"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
