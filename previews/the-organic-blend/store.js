@@ -36,6 +36,15 @@ const deliveryWindows = ['Sample delivery · 10 a.m.–noon','Sample delivery ·
 const exampleZip = '92509';
 const deliveryFee = 400;
 const storageKey = 'the-organic-blend-portfolio-v1';
+const popupStorageKey = 'the-organic-blend-portfolio-popups-v1';
+const firstPopUp = {
+  id:'medspa-grand-opening', title:'Medspa Grand Opening', date:'2026-12-05',
+  start:'10:00', end:'13:00', location:'9033 Baseline Rd, Suite N, Rancho Cucamonga, CA'
+};
+const calendarDay = new Intl.DateTimeFormat('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'2-digit',day:'2-digit'});
+const popupDay = new Intl.DateTimeFormat('en-US',{timeZone:'UTC',weekday:'long',month:'long',day:'numeric',year:'numeric'});
+const popupMonth = new Intl.DateTimeFormat('en-US',{timeZone:'UTC',month:'short'});
+const popupClock = new Intl.DateTimeFormat('en-US',{timeZone:'UTC',hour:'numeric',minute:'2-digit'});
 const stepText = {
   pickup:['Order received','Preparing','Ready for pickup','Picked up'],
   delivery:['Order received','Preparing','Ready for driver','Assigned to crew','Out for delivery','Delivered']
@@ -72,7 +81,16 @@ function load() {
   } catch {}
   return seed();
 }
+function loadPopUps() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(popupStorageKey));
+    if (Array.isArray(stored)) return stored;
+  } catch {}
+  return [firstPopUp];
+}
+
 let state = load();
+let popUps = loadPopUps();
 let selectedTab = 'juices';
 let selectedMode = 'pickup';
 let operationsTab = 'orders';
@@ -144,6 +162,38 @@ function renderMenu() {
     content.innerHTML = `<div class="cards">${card(shot,'From $3')}</div>`;
   }
 }
+function today() {
+  const parts = Object.fromEntries(calendarDay.formatToParts(new Date()).map(({type,value}) => [type,value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+function sortedPopUps() {
+  return [...popUps].sort((a,b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
+}
+function upcomingPopUps() {
+  const date = today();
+  return sortedPopUps().filter(event => event.date >= date);
+}
+function popUpDate(event) {
+  return new Date(event.date + 'T12:00:00Z');
+}
+function popUpTime(event) {
+  const toTime = time => new Date('2000-01-01T' + time + 'Z');
+  return popupClock.formatRange(toTime(event.start),toTime(event.end));
+}
+function popUpLabel(event) {
+  return `${popupDay.format(popUpDate(event))} · ${popUpTime(event)}`;
+}
+function popUpCard(event) {
+  const date = popUpDate(event);
+  return `<article class="event">
+    <time class="event-date" datetime="${escape(event.date)}" aria-label="${popupDay.format(date)}"><span>${popupMonth.format(date).toUpperCase()}</span><strong>${date.getUTCDate()}</strong></time>
+    <div><h3>${escape(event.title)}</h3><p>${popUpLabel(event)}</p><p>${escape(event.location)}</p></div>
+  </article>`;
+}
+function renderPopUps() {
+  $('#popup-list').innerHTML = upcomingPopUps().map(popUpCard).join('') || '<p>No upcoming pop-ups posted.</p>';
+}
+
 function renderBagCount() {
   const count = state.bag.reduce((sum,line) => sum + line.qty,0);
   $('#bag-count').textContent = count;
@@ -265,17 +315,32 @@ function checkout() {
       <label class="choice"><input type="radio" name="mode" value="delivery" ${selectedMode === 'delivery' ? 'checked' : ''}> Local delivery</label>
     </div></fieldset>
     <label id="zip-field">Demo ZIP code<input name="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" value="${exampleZip}" maxlength="5" required></label>
-    <label>Sample window<select name="window" required></select></label>
+    <label>Fulfillment window<select name="window" required></select></label>
     <p class="error" role="alert"></p><div class="totals" id="checkout-total"></div>
     <div class="row"><button class="button outline" type="button" data-view="bag">Back to bag</button><button class="button" type="submit">Place demo order</button></div>
   </form>`);
   refreshCheckout($('#checkout-form'),true);
 }
-function refreshCheckout(form,newMode) {
+function checkoutWindows(mode) {
+  const windows = (mode === 'delivery' ? deliveryWindows : pickupWindows).map(label => ({value:label,label}));
+  if (mode === 'pickup') {
+    windows.unshift(...upcomingPopUps().map(event => ({
+      value:event.id, label:`${event.title} · ${popUpLabel(event)}`, location:event.location
+    })));
+  }
+  return windows;
+}
+function refreshCheckout(form,refreshWindows) {
   const delivery = form.elements.mode.value === 'delivery';
   $('#zip-field').hidden = !delivery;
   form.elements.zip.disabled = !delivery;
-  if (newMode) form.elements.window.innerHTML = (delivery ? deliveryWindows : pickupWindows).map(label => `<option>${label}</option>`).join('');
+  if (refreshWindows) {
+    const select = form.elements.window;
+    const selected = select.value;
+    const windows = checkoutWindows(form.elements.mode.value);
+    select.innerHTML = windows.map(window => `<option value="${escape(window.value)}">${escape(window.label)}</option>`).join('');
+    if (windows.some(window => window.value === selected)) select.value = selected;
+  }
   const eligible = !delivery || form.elements.zip.value === exampleZip;
   $('.error',form).textContent = eligible ? '' : `Use ${exampleZip} to try local delivery.`;
   $('#checkout-total').innerHTML = `<div class="row"><span>Subtotal</span><span>${money(bagTotal())}</span></div>
@@ -286,9 +351,14 @@ function submitOrder(form) {
   const fields = new FormData(form);
   const mode = fields.get('mode');
   const delivery = mode === 'delivery';
-  const target = fields.get('window');
+  const choice = checkoutWindows(mode).find(window => window.value === fields.get('window'));
   if (delivery && fields.get('zip') !== exampleZip) { refreshCheckout(form,false); return; }
-  if (!(delivery ? deliveryWindows : pickupWindows).includes(target)) return;
+  if (!choice) {
+    refreshCheckout(form,true);
+    $('.error',form).textContent = 'That window is no longer available. Choose another one.';
+    return;
+  }
+  const target = choice.location ? `${choice.label} · ${choice.location}` : choice.label;
   if (!state.bag.length || !fitsStock(state.bag)) { $('.error',form).textContent = 'Stock changed. Check your bag before continuing.'; return; }
   const id = state.next++;
   for (const item of stockNames) state.stock[item.key] -= usedStock(state.bag,item.key);
@@ -304,7 +374,7 @@ function submitOrder(form) {
 function tracking(id=state.last,confirmed=false,missing=false) {
   const order = state.orders.find(item => item.id === Number(id));
   const receipt = order ? `<div class="stack"><strong>${orderCode(order.id)} · ${order.mode === 'pickup' ? 'Event pickup' : 'Local delivery'}</strong>
-    <p class="hint">${order.target}</p><ul class="progress">${stepText[order.mode].map((step,index) =>
+    <p class="hint">${escape(order.target)}</p><ul class="progress">${stepText[order.mode].map((step,index) =>
       `<li class="${index <= order.step ? 'done' : ''}" ${index === order.step ? 'aria-current="step"' : ''}>${step}</li>`).join('')}</ul>
     <div>${order.items.map(line => `<p>${lineMarkup(line)}</p>`).join('')}</div><strong>${money(order.total)}</strong></div>` : '';
   show('track',confirmed ? 'Demo order placed' : 'Track a demo order',`<div class="stack">${receipt}
@@ -322,7 +392,7 @@ function orderCard(order,view) {
   const managerSteps = { 0:'Start preparing',1:order.mode === 'delivery' ? 'Ready for driver' : 'Ready for pickup',2:order.mode === 'delivery' ? 'Assign to crew' : 'Mark picked up' };
   const action = view === 'manager' ? managerSteps[order.step] : {3:'Start delivery',4:'Mark delivered'}[order.step];
   return `<article class="order"><div class="row"><strong>${orderCode(order.id)}</strong><span class="pill">${order.mode === 'pickup' ? 'Pickup' : 'Delivery'}</span></div>
-    <p><strong>${stepText[order.mode][order.step]}</strong> · ${money(order.total)}</p><p class="hint">${order.target}</p>
+    <p><strong>${stepText[order.mode][order.step]}</strong> · ${money(order.total)}</p><p class="hint">${escape(order.target)}</p>
     <div>${order.items.map(line => `<p>${lineMarkup(line)}</p>`).join('')}</div>
     <div class="row left">${action && active(order) ? `<button class="button" type="button" data-advance="${order.id}">${action}</button>` : ''}
     <button class="button outline" type="button" data-track="${order.id}">Track</button></div></article>`;
@@ -348,13 +418,60 @@ function alertsPanel() {
   return `<div class="stack"><p class="demo-hint">Sample email and text alerts appear here whenever a visitor places a demo order in this browser.</p>
     ${state.alerts.length ? state.alerts.slice(0,12).map(id => `<article class="order"><strong>New order · ${orderCode(id)}</strong><p class="hint">Email and SMS preview</p></article>`).join('') : '<p class="hint">Place a demo order from the storefront to see an alert.</p>'}</div>`;
 }
+function popUpsPanel() {
+  return `<div class="popup-manager">
+    <form class="form popup-editor" id="popup-form">
+      <h2>Add a pop-up</h2>
+      <p class="hint">Added events appear on the storefront and in demo pickup checkout in this browser. Times are Pacific.</p>
+      <label>Event name<input name="title" required maxlength="80"></label>
+      <label>Date<input type="date" name="date" min="${today()}" required></label>
+      <div class="fields"><label>Start time<input type="time" name="start" required></label>
+      <label>End time<input type="time" name="end" required></label></div>
+      <label>Location or address<input name="location" required maxlength="160"></label>
+      <p class="error" role="alert"></p>
+      <button class="button" type="submit">Add pop-up</button>
+    </form>
+    <section aria-labelledby="scheduled-popups"><h2 id="scheduled-popups">Upcoming pop-ups</h2>
+      <div class="popup-list" id="manager-popup-list">${upcomingPopUps().map(popUpCard).join('') || '<p class="hint">No upcoming pop-ups.</p>'}</div>
+    </section>
+  </div>`;
+}
+function addPopUp(form) {
+  const fields = new FormData(form);
+  const title = fields.get('title').trim();
+  const location = fields.get('location').trim();
+  const date = fields.get('date');
+  const start = fields.get('start');
+  const end = fields.get('end');
+  const error = $('.error',form);
+  if (!title || !location) {
+    error.textContent = 'Enter an event name and a location.';
+    return;
+  }
+  if (date < today() || end <= start) {
+    error.textContent = 'Choose a date today or later and an end time after the start time.';
+    return;
+  }
+  const events = [...loadPopUps(),{ id:crypto.randomUUID(),title,date,start,end,location }];
+  try {
+    localStorage.setItem(popupStorageKey,JSON.stringify(events));
+  } catch {
+    error.textContent = 'This browser couldn’t save the pop-up.';
+    return;
+  }
+  popUps = events;
+  renderPopUps();
+  renderOps();
+  $('#popup-form [name="title"]').focus();
+  announce('Pop-up added');
+}
 function renderOps() {
   const store = $('#manager');
   const driver = $('#driver');
   if (!store.hidden) {
-    const tabs = [['orders','Orders'],['stock','Menu stock'],['alerts','Order alerts']];
-    const board = {orders:ordersBoard,stock:stockControls,alerts:alertsPanel};
-    store.innerHTML = opsHeading('Store manager','Prepare pickup orders, assign deliveries, and update sample stock.') +
+    const tabs = [['orders','Orders'],['stock','Menu stock'],['pop-ups','Pop-ups'],['alerts','Order alerts']];
+    const board = {orders:ordersBoard,stock:stockControls,'pop-ups':popUpsPanel,alerts:alertsPanel};
+    store.innerHTML = opsHeading('Store manager','Prepare orders, assign deliveries, and manage stock and pop-ups.') +
       `<div class="ops-tabs row left">${tabs.map(([id,label]) =>
         `<button type="button" class="button ${id === operationsTab ? '' : 'outline'}" data-ops="${id}" aria-pressed="${id === operationsTab}">${label}</button>`
       ).join('')}</div>` + board[operationsTab]();
@@ -438,10 +555,11 @@ document.addEventListener('change',event => {
 });
 document.addEventListener('submit',event => {
   const form = event.target;
-  if (!['product-form','checkout-form','track-form','stock-form'].includes(form.id)) return;
+  if (!['product-form','checkout-form','track-form','stock-form','popup-form'].includes(form.id)) return;
   event.preventDefault();
   if (form.id === 'product-form') addItem(form);
   if (form.id === 'checkout-form') submitOrder(form);
+  if (form.id === 'popup-form') addPopUp(form);
   if (form.id === 'track-form') {
     const input = form.elements.order.value.trim().replace(/^OB-/i,'');
     const id = /^\d+$/.test(input) ? Number(input) : null;
@@ -461,5 +579,15 @@ sheet.addEventListener('close',() => {
   if (!sheet.open && sheetView === 'track' && location.hash === '#track') history.replaceState(null,'',location.pathname+location.search);
 });
 window.addEventListener('hashchange',route);
+window.addEventListener('storage',event => {
+  if (event.key !== popupStorageKey) return;
+  popUps = loadPopUps();
+  renderPopUps();
+  const list = $('#manager-popup-list');
+  if (list) list.innerHTML = upcomingPopUps().map(popUpCard).join('') || '<p class="hint">No upcoming pop-ups.</p>';
+  const form = $('#checkout-form');
+  if (form?.elements.mode.value === 'pickup') refreshCheckout(form,true);
+});
 renderMenu();
+renderPopUps();
 route();

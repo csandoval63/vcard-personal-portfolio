@@ -107,3 +107,13 @@ dialog::backdrop{background:#14251b91} body:has(dialog[open]){overflow:hidden}
   .toast{bottom:68px}
 }
 @media(max-width:370px){.hero h1{font-size:2.65rem}.product-name span{font-size:.85rem}.fields{grid-template-columns:1fr}}
+
+.popup-list{display:grid;gap:9px}
+.event time{display:block}
+.event>div{min-width:0;overflow-wrap:anywhere}
+.popup-manager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:clamp(14px,3vw,34px)}
+.popup-manager h2{font-size:clamp(1.7rem,3vw,2.3rem);margin:0 0 10px}
+.popup-editor{padding:clamp(13px,2.6vw,21px);border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.popup-editor h2{margin-bottom:0}
+.popup-editor .button{justify-self:start}
+@media(max-width:690px){.popup-manager{grid-template-columns:minmax(0,1fr)}}
